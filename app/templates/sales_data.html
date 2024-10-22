@@ -3,6 +3,7 @@
 {% block content %}
     <h1>Sales Data</h1>
     <div class="container mt-4">
+        <a class="btn btn-primary mb-3" href="{{ url_for('sales.add_sales_data') }}">Add New Sales Data</a>
         <table id="data-table" class="display table table-striped table-bordered" width="100%">
             <thead>
                 <tr>
@@ -10,6 +11,7 @@
                     <th>Monthly Amount</th>
                     <th>Date</th>
                     <th>Region</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
