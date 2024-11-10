@@ -2,17 +2,56 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Pandas Example</title>
+    <title>Cute Pandas Example</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Custom Pink and Purple Theme */
+        body {
+            background-color: #ffe6f2; /* Light pink background */
+            font-family: 'Comic Sans MS', cursive, sans-serif; /* Fun font */
+        }
+        .navbar {
+            background-color: #ff99cc; /* Pink navbar */
+        }
+        .navbar-brand {
+            font-weight: bold;
+            color: #800080 !important; /* Deep purple for brand text */
+        }
+        .navbar-nav .nav-link {
+            color: #ffffff !important;
+            transition: color 0.3s ease;
+        }
+        .navbar-nav .nav-link:hover {
+            color: #ffd1dc !important; /* Lighter pink on hover */
+        }
+        .container {
+            background-color: #f7d6e0; /* Light pinkish container */
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2, h3, h4, h5, h6 {
+            color: #ff69b4; /* Hot pink for headings */
+        }
+        .btn-custom {
+            background-color: #ff66b2; /* Custom button color */
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+        }
+        .btn-custom:hover {
+            background-color: #d94f9f;
+        }
+    </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Pandas</a>
+<nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand" href="#">✨ Cute Pandas ✨</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
+        <ul class="navbar-nav ml-auto">
             <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('index') }}">Home</a>
             </li>
@@ -26,8 +65,9 @@
     </div>
 </nav>
 
-<div class="container mt-4">
-    {% block content %}{% endblock %}
+<div class="container mt-5">
+    {% block content %}
+    {% endblock %}
 </div>
 
 <!-- Include jQuery (full version) -->
