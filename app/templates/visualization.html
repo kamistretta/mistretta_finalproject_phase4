@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Sales Data Visualization</h1>
+    <p>Below is the sales data visualization based on regions:</p>
+
+    <!-- Embed the Plotly chart -->
+    <div id="chart">
+        {{ graph_html | safe }}
+    </div>
+{% endblock %}

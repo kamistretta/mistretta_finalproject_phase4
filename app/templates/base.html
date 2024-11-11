@@ -2,81 +2,142 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Cute Pandas Example</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Data Analysis</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <!-- Google Font for a retro arcade theme -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
-        /* Custom Pink and Purple Theme */
         body {
-            background-color: #ffe6f2; /* Light pink background */
-            font-family: 'Comic Sans MS', cursive, sans-serif; /* Fun font */
+            background-color: #121212; /* Dark background for contrast */
+            font-family: 'Press Start 2P', cursive; /* Retro, pixelated font */
+            color: #e0e0e0; /* Default light grey text for readability */
         }
+
         .navbar {
-            background-color: #ff99cc; /* Pink navbar */
+            background-color: #1f1f1f; /* Slightly lighter dark for navbar */
+            border-bottom: 3px solid #39ff14; /* Bright lime green border */
         }
-        .navbar-brand {
-            font-weight: bold;
-            color: #800080 !important; /* Deep purple for brand text */
+        .navbar-brand, .nav-link {
+            color: #ff6ec7 !important; /* Bright pink text */
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
-        .navbar-nav .nav-link {
-            color: #ffffff !important;
-            transition: color 0.3s ease;
+        .nav-link:hover {
+            color: #39ff14 !important; /* Lime green on hover */
         }
-        .navbar-nav .nav-link:hover {
-            color: #ffd1dc !important; /* Lighter pink on hover */
+
+        footer {
+            background-color: #1f1f1f; /* Matching dark footer */
+            color: #7df9ff; /* Electric blue text for footer */
+            text-align: center;
+            padding: 15px 0;
+            border-top: 3px solid #ff6ec7; /* Bright pink border */
+            position: relative;
+            width: 100%;
+            bottom: 0;
         }
+        footer p {
+            margin: 0;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
         .container {
-            background-color: #f7d6e0; /* Light pinkish container */
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 40px;
         }
-        h1, h2, h3, h4, h5, h6 {
-            color: #ff69b4; /* Hot pink for headings */
+
+        h1, h2 {
+            color: #7df9ff; /* Electric blue for headings */
+            text-shadow: 0 0 8px #ff6ec7; /* Pink glow effect for a retro feel */
         }
-        .btn-custom {
-            background-color: #ff66b2; /* Custom button color */
-            color: #fff;
+
+        /* Styling for data tables or populated content */
+        .data-content {
+            color: #39ff14; /* Neon green for dynamically populated data */
+            text-shadow: 0 0 5px rgba(57, 255, 20, 0.8); /* Soft glow for emphasis */
+        }
+
+        .btn-primary {
+            background-color: #ff6ec7; /* Bright pink button */
             border: none;
-            border-radius: 50px;
+            color: #121212;
+            text-transform: uppercase;
         }
-        .btn-custom:hover {
-            background-color: #d94f9f;
+        .btn-primary:hover {
+            background-color: #7df9ff; /* Electric blue on hover */
+            color: #121212;
+        }
+
+        /* Table styling for sales data */
+        table {
+            background-color: #1f1f1f;
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #39ff14;
+            color: #e0e0e0;
+        }
+        th {
+            color: #7df9ff; /* Electric blue for table headers */
+            text-transform: uppercase;
+        }
+        tr:hover {
+            background-color: #292929; /* Dark hover effect */
         }
     </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg">
-    <a class="navbar-brand" href="#">✨ Cute Pandas ✨</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('index') }}">Home</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('about') }}">About</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('sales.show_sales') }}">Show Sales</a>
-            </li>
-        </ul>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand" href="{{ url_for('index') }}">Sales Arcade Hub</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('index') }}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('sales_data.sales') }}">Sales Data</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('region_info.regions') }}">Regions</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('reports') }}">Reports</a> <!-- New link to reports -->
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('visualization') }}">Visualization</a> <!-- New link to reports -->
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content Block -->
+    <div class="container">
+        {% block content %}
+        <!-- Example data content block -->
+        <div class="data-content">
+            <p>{{ sales_data }}</p>
+        </div>
+        {% endblock %}
     </div>
-</nav>
 
-<div class="container mt-5">
-    {% block content %}
-    {% endblock %}
-</div>
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Sales Arcade Hub. All Rights Reserved.</p>
+    </footer>
 
-<!-- Include jQuery (full version) -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- Include Popper.js and Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-<!-- Block for page-specific scripts -->
-{% block scripts %}{% endblock %}
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

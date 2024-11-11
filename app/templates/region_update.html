@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Update/Delete Region</h1>
+
+    <!-- Update Region Form -->
+    <form method="POST" action="{{ url_for('region_info.update_region', region_id=current_region_info['region_id']) }}">
+        <div class="form-group">
+            <label for="name">Region Name</label>
+            <input type="text" class="form-control" id="name" name="name" value="{{ current_region_info['name'] }}" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Update Region</button>
+        <a href="{{ url_for('region_info.regions') }}" class="btn btn-secondary">Cancel</a>
+    </form>
+
+    <!-- Delete Region Form -->
+    <form action="{{ url_for('region_info.delete_region', region_id=current_region_info['region_id']) }}" method="POST" class="mt-4">
+        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this region?');">Delete Region</button>
+    </form>
+</div>
+
+{% endblock %}
