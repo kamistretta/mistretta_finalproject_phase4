@@ -1,0 +1,27 @@
+Table attendee_info {
+    attendee_id int [primary key, increment]
+    user_id int
+    event_id int
+    rsvp_date datetime
+    status enum('RSVPed', 'Attended', 'Cancelled')
+}
+
+Table event_info {
+    event_id int [primary key, increment]
+    event_name varchar(100)
+    category varchar(50)
+    description text
+    date date
+    time time
+    location varchar(255)
+    max_attendees int
+    current_attendees int
+}
+
+Table user_info {
+    user_id int [primary key, increment]
+    username varchar(50)
+    email varchar(100)
+    password_hash varchar(255)
+    preferred_categories varchar(255)
+}
