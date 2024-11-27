@@ -3,37 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sales Data Analysis</title>
+    <title>Quirky Events Co.</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <!-- Google Font for a retro arcade theme -->
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <!-- Google Font for a fun theme -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
     <style>
         body {
-            background-color: #121212; /* Dark background for contrast */
-            font-family: 'Press Start 2P', cursive; /* Retro, pixelated font */
-            color: #e0e0e0; /* Default light grey text for readability */
+            background-color: #f0f8ff; /* Light blue background for a cheerful vibe */
+            font-family: 'Quicksand', sans-serif; /* Clean, friendly font */
+            color: #333; /* Dark text for readability */
         }
 
         .navbar {
-            background-color: #1f1f1f; /* Slightly lighter dark for navbar */
-            border-bottom: 3px solid #39ff14; /* Bright lime green border */
+            background-color: #ff6347; /* Tomato red for navbar */
+            border-bottom: 3px solid #ffeb3b; /* Bright yellow border */
         }
         .navbar-brand, .nav-link {
-            color: #ff6ec7 !important; /* Bright pink text */
+            color: #fff !important; /* White text for brand and links */
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
         }
         .nav-link:hover {
-            color: #39ff14 !important; /* Lime green on hover */
+            color: #ffeb3b !important; /* Bright yellow on hover */
         }
 
         footer {
-            background-color: #1f1f1f; /* Matching dark footer */
-            color: #7df9ff; /* Electric blue text for footer */
+            background-color: #ff6347; /* Tomato red footer */
+            color: #fff; /* White text */
             text-align: center;
             padding: 15px 0;
-            border-top: 3px solid #ff6ec7; /* Bright pink border */
+            border-top: 3px solid #ffeb3b; /* Bright yellow border */
             position: relative;
             width: 100%;
             bottom: 0;
@@ -49,30 +49,28 @@
         }
 
         h1, h2 {
-            color: #7df9ff; /* Electric blue for headings */
-            text-shadow: 0 0 8px #ff6ec7; /* Pink glow effect for a retro feel */
+            color: #ff6347; /* Tomato red for headings */
+            text-shadow: 0 0 8px #ffeb3b; /* Yellow glow effect for a fun theme */
         }
 
-        /* Styling for data tables or populated content */
         .data-content {
-            color: #39ff14; /* Neon green for dynamically populated data */
-            text-shadow: 0 0 5px rgba(57, 255, 20, 0.8); /* Soft glow for emphasis */
+            color: #ff6347; /* Tomato red for dynamic data */
+            text-shadow: 0 0 5px rgba(255, 99, 71, 0.8); /* Soft red glow */
         }
 
         .btn-primary {
-            background-color: #ff6ec7; /* Bright pink button */
+            background-color: #ffeb3b; /* Bright yellow button */
             border: none;
             color: #121212;
             text-transform: uppercase;
         }
         .btn-primary:hover {
-            background-color: #7df9ff; /* Electric blue on hover */
-            color: #121212;
+            background-color: #ff6347; /* Tomato red on hover */
+            color: #fff;
         }
 
-        /* Table styling for sales data */
         table {
-            background-color: #1f1f1f;
+            background-color: #fff;
             border-collapse: collapse;
             width: 100%;
             margin-top: 20px;
@@ -80,22 +78,22 @@
         th, td {
             padding: 15px;
             text-align: left;
-            border-bottom: 1px solid #39ff14;
-            color: #e0e0e0;
+            border-bottom: 2px solid #ff6347;
+            color: #333;
         }
         th {
-            color: #7df9ff; /* Electric blue for table headers */
+            color: #ff6347; /* Tomato red for table headers */
             text-transform: uppercase;
         }
         tr:hover {
-            background-color: #292929; /* Dark hover effect */
+            background-color: #ffeb3b; /* Yellow hover effect */
         }
     </style>
 </head>
 <body>
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg">
-        <a class="navbar-brand" href="{{ url_for('index') }}">Sales Arcade Hub</a>
+        <a class="navbar-brand" href="{{ url_for('index') }}">Quirky Events Co.</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -105,16 +103,13 @@
                     <a class="nav-link" href="{{ url_for('index') }}">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('sales_data.sales') }}">Sales Data</a>
+                    <a class="nav-link" href="{{ url_for('event_info.events') }}">Events</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('region_info.regions') }}">Regions</a>
+                    <a class="nav-link" href="{{ url_for('attendee_info.attendees') }}">Sign Up</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('reports') }}">Reports</a> <!-- New link to reports -->
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('visualization') }}">Visualization</a> <!-- New link to reports -->
+                    <a class="nav-link" href="{{ url_for('user_info.users') }}">About</a>
                 </li>
             </ul>
         </div>
@@ -123,16 +118,16 @@
     <!-- Main Content Block -->
     <div class="container">
         {% block content %}
-        <!-- Example data content block -->
+        <!-- Example dynamic content block -->
         <div class="data-content">
-            <p>{{ sales_data }}</p>
+            <p>{{ event_data }}</p>
         </div>
         {% endblock %}
     </div>
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2024 Sales Arcade Hub. All Rights Reserved.</p>
+        <p>&copy; 2024 Quirky Events Co. All Rights Reserved.</p>
     </footer>
 
     <!-- Bootstrap JS -->
