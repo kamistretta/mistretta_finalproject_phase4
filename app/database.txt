@@ -1,0 +1,54 @@
+--table 1
+Table: attendee_info
+
+Columns:
+attendee_id
+int AI PK
+user_id
+int
+event_id
+int
+rsvp_date
+datetime
+status
+enum('RSVPed','Attended','Cancelled')
+
+--table 2
+Table: event_info
+
+Columns:
+event_id
+int AI PK
+event_name
+varchar(100)
+category
+varchar(50)
+description
+text
+date
+date
+time
+time
+location
+varchar(255)
+max_attendees
+int
+current_attendees
+int
+
+--table 3
+Table: user_info
+
+Columns:
+user_id
+int AI PK
+username
+varchar(50)
+email
+varchar(100)
+password_hash
+varchar(255)
+preferred_categories
+varchar(255)
+
+
