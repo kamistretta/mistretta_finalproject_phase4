@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from app.db_connect import get_db
+import bcrypt  # Import bcrypt for password hashing
 
 user_info = Blueprint('user_info', __name__)
 
@@ -13,8 +14,11 @@ def users():
     if request.method == 'POST':
         username = request.form['username']
         email = request.form['email']
-        password_hash = request.form['password_hash']
+        password = request.form['password']  # Capture the password input
         preferred_categories = request.form['preferred_categories']
+
+        # Hash the password before storing it
+        password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
         # Insert the new user into the database
         cursor.execute('INSERT INTO user_info (username, email, password_hash, preferred_categories) VALUES (%s, %s, %s, %s)',
@@ -57,14 +61,18 @@ def update_user(user_id):
     cursor = db.cursor()
 
     if request.method == 'POST':
-        # Update the user's details
         username = request.form['username']
         email = request.form['email']
-        password_hash = request.form['password_hash']
+        password = request.form.get('password')  # Get the new password (optional)
         preferred_categories = request.form['preferred_categories']
 
-        cursor.execute('UPDATE user_info SET username = %s, email = %s, password_hash = %s, preferred_categories = %s WHERE user_id = %s',
-                       (username, email, password_hash, preferred_categories, user_id))
+        if password:  # If a new password is provided, hash it
+            password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+            cursor.execute('UPDATE user_info SET username = %s, email = %s, password_hash = %s, preferred_categories = %s WHERE user_id = %s',
+                           (username, email, password_hash, preferred_categories, user_id))
+        else:  # If no new password, update only other fields
+            cursor.execute('UPDATE user_info SET username = %s, email = %s, preferred_categories = %s WHERE user_id = %s',
+                           (username, email, preferred_categories, user_id))
         db.commit()
 
         flash('User updated successfully!', 'success')
