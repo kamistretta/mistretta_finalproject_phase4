@@ -3,7 +3,7 @@
 {% block content %}
 
 <h1>Welcome to Quirky Events Co.</h1>
-<br>
+
 <p>
     We're here to make your event planning experience as fun and exciting as possible! Whether it's a birthday bash, a corporate gathering, or a surprise party, our team is dedicated to turning your ideas into reality with a colorful twist.
 </p>
@@ -20,4 +20,19 @@
     Whether you're looking to RSVP for a quirky workshop, attend a creative social gathering, or plan your next big celebration, Quirky Events Co. has you covered. Browse our events, sign up, and get ready for the most vibrant experiences of your life!
 </p>
 
+<!-- Image of happy people partying -->
+<img src="{{ url_for('static', filename='happypeople.webp') }}" alt="Happy People Partying" class="party-image">
+
 {% endblock %}
+
+<style>
+    .party-image {
+        max-width: 15%; /* Set the image width to 15% of its container */
+        height: auto;
+        border-radius: 10px; /* Optional rounded corners */
+        margin-top: 20px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+</style>
