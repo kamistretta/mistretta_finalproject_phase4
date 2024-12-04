@@ -97,7 +97,7 @@
                 <td>{{ event.time }}</td>
                 <td>{{ event.location }}</td>
                 <td>{{ event.max_attendees }}</td>
-                <td>{{ event.attendee_count }}</td> <!-- Display current attendee count -->
+                <td>{{ event.attendee_count }}</td>
                 <td>
                     <!-- Update button -->
                     <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#updateEventModal{{ event.event_id }}">Update</button>
@@ -107,8 +107,79 @@
                 </td>
             </tr>
 
-            <!-- Update and Delete Modals -->
-            <!-- (Similar to the existing modal structure for each event) -->
+            <!-- Update Event Modal -->
+            <div class="modal fade" id="updateEventModal{{ event.event_id }}" tabindex="-1" role="dialog" aria-labelledby="updateEventModalLabel{{ event.event_id }}" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="updateEventModalLabel{{ event.event_id }}">Update Event</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form method="POST" action="{{ url_for('event_info.update_event', event_id=event.event_id) }}">
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="event_name">Event Name</label>
+                                    <input type="text" class="form-control" name="event_name" value="{{ event.event_name }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="category">Category</label>
+                                    <input type="text" class="form-control" name="category" value="{{ event.category }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="description">Description</label>
+                                    <textarea class="form-control" name="description" rows="3" required>{{ event.description }}</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="event_date">Date</label>
+                                    <input type="date" class="form-control" name="event_date" value="{{ event.date }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="event_time">Time</label>
+                                    <input type="time" class="form-control" name="event_time" value="{{ event.time }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="location">Location</label>
+                                    <input type="text" class="form-control" name="location" value="{{ event.location }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="max_attendees">Max Attendees</label>
+                                    <input type="number" class="form-control" name="max_attendees" value="{{ event.max_attendees }}" required>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-warning">Update Event</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delete Event Modal -->
+            <div class="modal fade" id="deleteEventModal{{ event.event_id }}" tabindex="-1" role="dialog" aria-labelledby="deleteEventModalLabel{{ event.event_id }}" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteEventModalLabel{{ event.event_id }}">Delete Event</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to delete the event <strong>{{ event.event_name }}</strong>?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <form method="POST" action="{{ url_for('event_info.delete_event', event_id=event.event_id) }}">
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {% endfor %}
         </tbody>
     </table>

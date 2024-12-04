@@ -30,4 +30,3 @@ def close_db(exception=None):
         db.close()
 
 
-
