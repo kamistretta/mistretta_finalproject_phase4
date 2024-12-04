@@ -5,49 +5,69 @@
 <div class="container mt-5">
     <h1 class="text-center mb-4">Manage Attendees</h1>
 
-    <!-- Form to add a new attendee -->
-    <form method="POST" action="{{ url_for('attendee_info.attendees') }}" class="mb-4">
-        <div class="form-row">
-            <div class="col">
-                <!-- Dropdown for user_id -->
-                <select class="form-control" name="user_id" required>
-                    <option value="" disabled selected>Select User</option>
-                    {% for user in all_users %}
-                        <option value="{{ user.user_id }}">{{ user.username }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="col">
-                <!-- Dropdown for event_id -->
-                <select class="form-control" name="event_id" required>
-                    <option value="" disabled selected>Select Event</option>
-                    {% for event in all_events %}
-                        <option value="{{ event.event_id }}">{{ event.event_name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="col">
-                <input type="date" class="form-control" name="rsvp_date" placeholder="RSVP Date" required>
-            </div>
-            <div class="col">
-                <select class="form-control" name="status" required>
-                    <option value="" disabled selected>Status</option>
-                    <option value="RSVPed">RSVPed</option>
-                    <option value="Attended">Attended</option>
-                    <option value="Cancelled">Cancelled</option>
-                </select>
-            </div>
-            <div class="col">
-                <button type="submit" class="btn btn-primary">Add Attendee</button>
+    <!-- Button to trigger the add attendee modal -->
+    <button type="button" class="btn btn-primary mb-4" data-toggle="modal" data-target="#addAttendeeModal">
+        Add Attendee
+    </button>
+
+    <!-- Add Attendee Modal -->
+    <div class="modal fade" id="addAttendeeModal" tabindex="-1" role="dialog" aria-labelledby="addAttendeeModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addAttendeeModalLabel">Add Attendee</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="POST" action="{{ url_for('attendee_info.attendees') }}">
+                    <div class="modal-body">
+                        <!-- Add Form Fields -->
+                        <div class="form-group">
+                            <label for="user_id">User</label>
+                            <select class="form-control" name="user_id" required>
+                                <option value="" disabled selected>Select User</option>
+                                {% for user in all_users %}
+                                    <option value="{{ user.user_id }}">{{ user.username }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="event_id">Event</label>
+                            <select class="form-control" name="event_id" required>
+                                <option value="" disabled selected>Select Event</option>
+                                {% for event in all_events %}
+                                    <option value="{{ event.event_id }}">{{ event.event_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="rsvp_date">RSVP Date</label>
+                            <input type="date" class="form-control" name="rsvp_date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="status">Status</label>
+                            <select class="form-control" name="status" required>
+                                <option value="" disabled selected>Status</option>
+                                <option value="RSVPed">RSVPed</option>
+                                <option value="Attended">Attended</option>
+                                <option value="Cancelled">Cancelled</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Add Attendee</button>
+                    </div>
+                </form>
             </div>
         </div>
-    </form>
+    </div>
 
     <!-- Table to display all attendees -->
     <table class="table table-striped table-bordered">
         <thead class="thead-dark">
             <tr>
-                <!-- Removed Attendee ID Column -->
                 <th scope="col">User</th>
                 <th scope="col">Event</th>
                 <th scope="col">RSVP Date</th>
@@ -57,21 +77,94 @@
         </thead>
         <tbody>
             {% for attendee in all_attendees %}
-            <tr data-attendee-id="{{ attendee.attendee_id }}"> <!-- Attendee ID hidden in data attribute -->
-                <td>{{ attendee.username }}</td> <!-- Display related username -->
-                <td>{{ attendee.event_name }}</td> <!-- Display related event name -->
+            <tr>
+                <td>{{ attendee.username }}</td>
+                <td>{{ attendee.event_name }}</td>
                 <td>{{ attendee.rsvp_date }}</td>
                 <td>{{ attendee.status }}</td>
                 <td>
                     <!-- Update button -->
-                    <a href="{{ url_for('attendee_info.update_attendee', attendee_id=attendee.attendee_id) }}" class="btn btn-warning btn-sm">Update</a>
+                    <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#updateAttendeeModal{{ attendee.attendee_id }}">Update</button>
 
                     <!-- Delete button -->
-                    <form action="{{ url_for('attendee_info.delete_attendee', attendee_id=attendee.attendee_id) }}" method="POST" style="display:inline;">
-                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this attendee?');">Delete</button>
-                    </form>
+                    <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteAttendeeModal{{ attendee.attendee_id }}">Delete</button>
                 </td>
             </tr>
+
+            <!-- Update Attendee Modal -->
+            <div class="modal fade" id="updateAttendeeModal{{ attendee.attendee_id }}" tabindex="-1" role="dialog" aria-labelledby="updateAttendeeModalLabel{{ attendee.attendee_id }}" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="updateAttendeeModalLabel{{ attendee.attendee_id }}">Update Attendee</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form method="POST" action="{{ url_for('attendee_info.update_attendee', attendee_id=attendee.attendee_id) }}">
+                            <div class="modal-body">
+                                <!-- Update Form Fields -->
+                                <div class="form-group">
+                                    <label for="user_id">User</label>
+                                    <select class="form-control" name="user_id" required>
+                                        {% for user in all_users %}
+                                            <option value="{{ user.user_id }}" {% if user.user_id == attendee.user_id %}selected{% endif %}>{{ user.username }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="event_id">Event</label>
+                                    <select class="form-control" name="event_id" required>
+                                        {% for event in all_events %}
+                                            <option value="{{ event.event_id }}" {% if event.event_id == attendee.event_id %}selected{% endif %}>{{ event.event_name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="rsvp_date">RSVP Date</label>
+                                    <input type="date" class="form-control" name="rsvp_date" value="{{ attendee.rsvp_date }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="status">Status</label>
+                                    <select class="form-control" name="status" required>
+                                        <option value="RSVPed" {% if attendee.status == "RSVPed" %}selected{% endif %}>RSVPed</option>
+                                        <option value="Attended" {% if attendee.status == "Attended" %}selected{% endif %}>Attended</option>
+                                        <option value="Cancelled" {% if attendee.status == "Cancelled" %}selected{% endif %}>Cancelled</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-warning">Update Attendee</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delete Attendee Modal -->
+            <div class="modal fade" id="deleteAttendeeModal{{ attendee.attendee_id }}" tabindex="-1" role="dialog" aria-labelledby="deleteAttendeeModalLabel{{ attendee.attendee_id }}" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteAttendeeModalLabel{{ attendee.attendee_id }}">Delete Attendee</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to delete attendee <strong>{{ attendee.username }}</strong> from the event <strong>{{ attendee.event_name }}</strong>?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <form method="POST" action="{{ url_for('attendee_info.delete_attendee', attendee_id=attendee.attendee_id) }}">
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {% endfor %}
         </tbody>
     </table>

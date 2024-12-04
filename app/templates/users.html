@@ -20,30 +20,45 @@
         </div>
     </form>
 
-    <!-- Form to add a new user -->
-    <form method="POST" action="{{ url_for('user_info.users') }}" class="mb-4">
-        <div class="form-row">
-            <div class="col">
-                <input type="text" class="form-control" name="username" placeholder="Username" required>
-            </div>
-            <div class="col">
-                <input type="email" class="form-control" name="email" placeholder="Email" required>
-            </div>
-            <div class="col">
-                <input type="password" class="form-control" name="password" placeholder="Password" required>
-            </div>
-            <div class="col">
-                <select class="form-control" name="preferred_categories">
-                    <option value="" disabled selected>Select Category</option>
-                    <option value="Tech">Tech</option>
-                    <option value="Art">Art</option>
-                </select>
-            </div>
-            <div class="col">
-                <button type="submit" class="btn btn-primary">Add User</button>
+    <!-- Button to trigger the add user modal -->
+    <button type="button" class="btn btn-primary mb-4" data-toggle="modal" data-target="#addUserModal">
+        Add User
+    </button>
+
+    <!-- Add User Modal -->
+    <div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="addUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addUserModalLabel">Add User</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="POST" action="{{ url_for('user_info.users') }}">
+                    <div class="modal-body">
+                        <!-- Add User Form Fields -->
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" class="form-control" name="username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" class="form-control" name="password" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Add User</button>
+                    </div>
+                </form>
             </div>
         </div>
-    </form>
+    </div>
 
     <!-- Table to display all users -->
     <table class="table table-striped table-bordered">
@@ -51,23 +66,77 @@
             <tr>
                 <th scope="col">Username</th>
                 <th scope="col">Email</th>
-                <th scope="col">Preferred Categories</th>
                 <th scope="col">Actions</th>
             </tr>
         </thead>
         <tbody>
             {% for user in all_users %}
-            <tr data-user-id="{{ user.user_id }}">
+            <tr>
                 <td>{{ user.username }}</td>
                 <td>{{ user.email }}</td>
-                <td>{{ user.preferred_categories }}</td>
                 <td>
-                    <a href="{{ url_for('user_info.update_user', user_id=user.user_id) }}" class="btn btn-warning btn-sm">Update</a>
-                    <form action="{{ url_for('user_info.delete_user', user_id=user.user_id) }}" method="POST" style="display:inline;">
-                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this user?');">Delete</button>
-                    </form>
+                    <!-- Update button -->
+                    <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#updateUserModal{{ user.user_id }}">Update</button>
+
+                    <!-- Delete button -->
+                    <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteUserModal{{ user.user_id }}">Delete</button>
                 </td>
             </tr>
+
+            <!-- Update User Modal -->
+            <div class="modal fade" id="updateUserModal{{ user.user_id }}" tabindex="-1" role="dialog" aria-labelledby="updateUserModalLabel{{ user.user_id }}" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="updateUserModalLabel{{ user.user_id }}">Update User</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form method="POST" action="{{ url_for('user_info.update_user', user_id=user.user_id) }}">
+                            <div class="modal-body">
+                                <!-- Update User Form Fields -->
+                                <div class="form-group">
+                                    <label for="username">Username</label>
+                                    <input type="text" class="form-control" name="username" value="{{ user.username }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" class="form-control" name="email" value="{{ user.email }}" required>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-warning">Update User</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delete User Modal -->
+            <div class="modal fade" id="deleteUserModal{{ user.user_id }}" tabindex="-1" role="dialog" aria-labelledby="deleteUserModalLabel{{ user.user_id }}" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteUserModalLabel{{ user.user_id }}">Delete User</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to delete user <strong>{{ user.username }}</strong>?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <form method="POST" action="{{ url_for('user_info.delete_user', user_id=user.user_id) }}">
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {% endfor %}
         </tbody>
     </table>

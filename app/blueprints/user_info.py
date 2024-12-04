@@ -15,14 +15,13 @@ def users():
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']  # Capture the password input
-        preferred_categories = request.form['preferred_categories']
 
         # Hash the password before storing it
         password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
         # Insert the new user into the database
-        cursor.execute('INSERT INTO user_info (username, email, password_hash, preferred_categories) VALUES (%s, %s, %s, %s)',
-                       (username, email, password_hash, preferred_categories))
+        cursor.execute('INSERT INTO user_info (username, email, password_hash) VALUES (%s, %s, %s)',
+                       (username, email, password_hash))
         db.commit()
 
         flash('New user added successfully!', 'success')
@@ -31,7 +30,6 @@ def users():
     # Handle GET request for filtering
     username_filter = request.args.get('username')
     email_filter = request.args.get('email')
-    preferred_categories_filter = request.args.get('preferred_categories')
 
     # Construct SQL query for filtering
     query = 'SELECT * FROM user_info WHERE TRUE'
@@ -44,10 +42,6 @@ def users():
     if email_filter:
         query += ' AND email LIKE %s'
         params.append(f'%{email_filter}%')
-
-    if preferred_categories_filter:
-        query += ' AND preferred_categories LIKE %s'
-        params.append(f'%{preferred_categories_filter}%')
 
     cursor.execute(query, params)
     all_users = cursor.fetchall()
@@ -64,15 +58,14 @@ def update_user(user_id):
         username = request.form['username']
         email = request.form['email']
         password = request.form.get('password')  # Get the new password (optional)
-        preferred_categories = request.form['preferred_categories']
 
         if password:  # If a new password is provided, hash it
             password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-            cursor.execute('UPDATE user_info SET username = %s, email = %s, password_hash = %s, preferred_categories = %s WHERE user_id = %s',
-                           (username, email, password_hash, preferred_categories, user_id))
+            cursor.execute('UPDATE user_info SET username = %s, email = %s, password_hash = %s WHERE user_id = %s',
+                           (username, email, password_hash, user_id))
         else:  # If no new password, update only other fields
-            cursor.execute('UPDATE user_info SET username = %s, email = %s, preferred_categories = %s WHERE user_id = %s',
-                           (username, email, preferred_categories, user_id))
+            cursor.execute('UPDATE user_info SET username = %s, email = %s WHERE user_id = %s',
+                           (username, email, user_id))
         db.commit()
 
         flash('User updated successfully!', 'success')

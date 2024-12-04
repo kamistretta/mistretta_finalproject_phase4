@@ -8,7 +8,7 @@ event_info = Blueprint('event_info', __name__)
 @event_info.route('/events', methods=['GET', 'POST'])
 def events():
     db = get_db()
-    cursor = db.cursor()  # Always define the cursor at the start
+    cursor = db.cursor()
 
     # Handle POST request to add a new event
     if request.method == 'POST':
@@ -19,7 +19,7 @@ def events():
         event_time = request.form['event_time']
         location = request.form['location']
         max_attendees = request.form['max_attendees']
-        current_attendees = 0  # Initializing current_attendees as 0
+        current_attendees = 0  # Initialize current_attendees as 0
 
         # Insert event into the event_info table
         cursor.execute(
@@ -33,14 +33,28 @@ def events():
     # Filtering logic
     location_filter = request.args.get('location', '').strip()
     if location_filter:
-        # Use LIKE for partial matching
-        query = 'SELECT * FROM event_info WHERE location LIKE %s'
+        query = '''
+            SELECT e.event_id, e.event_name, e.category, e.description, e.date, e.time, e.location, 
+                   e.max_attendees, e.current_attendees, 
+                   COUNT(a.attendee_id) AS attendee_count
+            FROM event_info e
+            LEFT JOIN attendee_info a ON e.event_id = a.event_id
+            WHERE e.location LIKE %s
+            GROUP BY e.event_id
+        '''
         cursor.execute(query, (f'%{location_filter}%',))
     else:
-        # Fetch all events if no filter is provided
-        cursor.execute('SELECT * FROM event_info')
+        query = '''
+            SELECT e.event_id, e.event_name, e.category, e.description, e.date, e.time, e.location, 
+                   e.max_attendees, e.current_attendees, 
+                   COUNT(a.attendee_id) AS attendee_count
+            FROM event_info e
+            LEFT JOIN attendee_info a ON e.event_id = a.event_id
+            GROUP BY e.event_id
+        '''
+        cursor.execute(query)
 
-    # Fetch all events from the database
+    # Fetch all events with attendee count
     all_events = cursor.fetchall()
     return render_template('events.html', all_events=all_events)
 
