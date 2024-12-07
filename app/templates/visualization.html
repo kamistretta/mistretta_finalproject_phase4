@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Attendees per Event (Line Chart)</h1>
+<div class="container mt-4">
+    {{ graph_html|safe }}
+</div>
+{% endblock %}

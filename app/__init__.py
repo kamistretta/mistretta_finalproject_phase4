@@ -9,13 +9,14 @@ app.secret_key = 'your-secret'  # Replace with an environment variable
 from app.blueprints.attendee_info import attendee_info
 from app.blueprints.event_info import event_info
 from app.blueprints.user_info import user_info
+ # Import the visualization blueprint
 
 app.register_blueprint(attendee_info)
 app.register_blueprint(event_info)
 app.register_blueprint(user_info)
+ # Register the visualization blueprint
 
-
-
+# Import other routes if needed
 from . import routes
 
 @app.before_request
@@ -26,4 +27,3 @@ def before_request():
 @app.teardown_appcontext
 def teardown_db(exception=None):
     close_db(exception)
-
