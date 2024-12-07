@@ -1,5 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from app.db_connect import get_db
+import pandas as pd
+import plotly.express as px  # Ensure this import is present
 
 # Create the events blueprint
 event_info = Blueprint('event_info', __name__)
@@ -98,3 +100,25 @@ def delete_event(event_id):
     db.commit()
     flash('Event deleted successfully!', 'danger')
     return redirect(url_for('event_info.events'))
+
+@event_info.route('/visualization')
+def visualization():
+    connection = get_db()
+    query = "SELECT event_name, current_attendees FROM event_info"
+    with connection.cursor() as cursor:
+        cursor.execute(query)
+        event_data = cursor.fetchall()
+
+    # Convert to DataFrame
+    df = pd.DataFrame(event_data, columns=['event_name', 'current_attendees'])
+
+    # Create a pie chart of current_attendees per event
+    fig = px.pie(
+        df,
+        names='event_name',
+        values='current_attendees',
+        title="Attendees per Event"
+    )
+
+    graph_html = fig.to_html(full_html=False)
+    return render_template('visualization.html', graph_html=graph_html)

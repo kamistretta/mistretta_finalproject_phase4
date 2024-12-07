@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Attendees per Event (Line Chart)</h1>
+<h1>Attendees per Event</h1>
 <div class="container mt-4">
+    <!-- Embed the Plotly pie chart -->
     {{ graph_html|safe }}
 </div>
 {% endblock %}
